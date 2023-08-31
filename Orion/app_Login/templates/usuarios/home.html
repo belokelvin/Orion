@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,9 +11,16 @@
         <div class="row justify-content-center mt-5">
             <div class="col-md-4 text-center">
                 <h2>Bem-vindo!</h2>
+                
                 <p>Crie sua conta ou faça login</p>
-                <a  class="btn btn-primary">Login </a>
-                <a  class="btn btn-primary">Criar uma conta</a>
+                <form class="signin-form" method="post" action="{% url 'go_cadastrar' %}">
+                    {% csrf_token %}
+                    <button type="submit" method="post" class="form-control btn btn-primary submit px-3">Cadastro</button>
+                </form>
+                <form class="signin-form" method="post" action="{% url 'go_login' %}">
+                    {% csrf_token %}
+                    <button type="submit" method="post" class="form-control btn btn-primary submit px-3" >Login</button>
+                
             </div>
         </div>
     </div>

@@ -8,15 +8,7 @@ class MongoConnection:
         self.db = self.client['Machos']
         self.users_collection = self.db["Usuarios"]
 
-class User:
-    def __init__(self, mongo_connection):
-        self.mongo_connection = mongo_connection
-        
-    def create_user(self, Usuario, Senha):
-        try:
-            hashed_password = make_password(Senha)  # Hasheie a senha
-            self.mongo_connection.users_collection.insert_one({"Usuario": Usuario, "Senha": hashed_password})
-            return "Usuário criado com sucesso!"
-        except pymongo.errors.DuplicateKeyError:
-            return "Nome de usuário já existe."
+class Usuario(models.Model):
+    username = models.CharField(max_length=100, unique=True)
+    password = models.CharField(max_length=100)
 

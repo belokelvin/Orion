@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password
+from django.contrib import messages
+
 
 from pymongo import MongoClient
 from .models import Usuario, MongoConnection
@@ -14,32 +16,11 @@ def go_login(request):
     return render(request, 'usuarios/Login.html')
 
 def cadastro(request):
-    print("Entrou")
-    var_ClienteConection = MongoConnection()  # Correção do operador de atribuição
-    var_db = var_ClienteConection.db  # Acessar o banco de dados da conexão
-
-    usuarios_collection = var_db['Usuarios']
-
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-
-        # Verificar se o usuário já existe no MongoDB
-        if usuarios_collection.find_one({'username': username}):
-            return redirect('home')  # Usuário já existe, redirecionar para a página inicial
-
-        # Verificar se o usuário já existe no model do Django
-        if Usuario.objects.filter(username=username).exists():
-            return redirect('home')  # Usuário já existe, redirecionar para a página inicial
-
-        # Inserir novo usuário no MongoDB
-        usuarios_collection.insert_one({'username': username, 'password': password})
-
-        # Hash da senha antes de inserir no model do Django
-        hashed_password = make_password(password)
-        novo_usuario = Usuario(username=username, password=hashed_password)
-        novo_usuario.save()
-
-        return redirect('pagina_carregar')  # Redirecionar para a página de carregamento
-
-    return render(request, 'usuarios/Cadastro.html')
+        var_objConector = MongoConnection()
+        var_objNovoUsuario = Usuario(var_objConector)
+        var_strResultado = var_objNovoUsuario.create_user(request.POST.get('usuario'), request.POST.get('senha'))
+        
+        if var_strResultado == 'Usuário criado com sucesso!':
+            messages.success(request, var_strResultado)  # Define a mensagem de sucesso usando o mecanismo de sessão
+            return redirect('home')  # Redireciona de volta à página inicial

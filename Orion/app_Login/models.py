@@ -5,7 +5,7 @@ from django.contrib.auth.hashers import make_password
 class MongoConnection:
     def __init__(self):
         self.client = pymongo.MongoClient('mongodb+srv://kelvincrdzbl:535846*Mud@machosbd.jrrfws5.mongodb.net/?retryWrites=true&w=majority')
-        self.db = self.client['Machos']
+        self.db = self.client['Orion']
         self.users_collection = self.db["Usuarios"]
 
 
